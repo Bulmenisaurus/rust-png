@@ -1,29 +1,24 @@
-/// mod png;
+pub use png;
 
-/// use png::RGBA;
-/// use rand::Rng;
+use png::RGBA;
 
-/// fn main() {
-///     fn random_pixel() -> RGBA {
-///         let mut rng = rand::thread_rng();
-///         RGBA {
-///             red: rng.gen(),
-///             blue: rng.gen(),
-///             green: rng.gen(),
-///             alpha: rng.gen(),
-///         }
-///     }
-///     let mut data = Vec::new();
-///     let height = 100;
-///     let width = 100;
+use rand::Rng;
 
-///     for _ in 0..(height * width) {
-///         data.push(random_pixel());
-///     }
-
-///     png::create_image(data, width, height);
-/// }
-/// code
-
-// TODO: figure out how to use `png.rs`
-fn main() {}
+fn main() {
+    fn random_pixel() -> RGBA {
+        let mut rng = rand::thread_rng();
+        RGBA {
+            red: rng.gen(),
+            blue: 128,
+            green: rng.gen(),
+            alpha: rng.gen(),
+        }
+    }
+    let mut data = Vec::new();
+    let height = 250;
+    let width = 250;
+    for _ in 0..(height * width) {
+        data.push(random_pixel());
+    }
+    png::create_image(data, width, height);
+}

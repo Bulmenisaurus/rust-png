@@ -3,23 +3,25 @@
 provides a simple function for creating png images:
 
 ```rust
-mod png;
+pub use png;
 
 use png::RGBA;
+
 use rand::Rng;
+
 fn main() {
     fn random_pixel() -> RGBA {
         let mut rng = rand::thread_rng();
         RGBA {
             red: rng.gen(),
-            blue: rng.gen(),
+            blue: 128,
             green: rng.gen(),
             alpha: rng.gen(),
         }
     }
     let mut data = Vec::new();
-    let height = 1000;
-    let width = 1000;
+    let height = 250;
+    let width = 250;
     for _ in 0..(height * width) {
         data.push(random_pixel());
     }
@@ -29,4 +31,4 @@ fn main() {
 
 results in
 
-![image with random pixels](./images/random-image.png)
+![image with random pixels](./images/image.png)
