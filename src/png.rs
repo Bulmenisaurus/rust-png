@@ -17,7 +17,7 @@ fn encode_image_chunk(chunk_type: &str, chunk_data: &mut Vec<u8>) -> Vec<u8> {
     // checksum over the chunk type + chunk data
 
     let mut crc_checksum: Vec<u8> =
-        crc_32(&([&chunk_type.as_bytes(), &chunk_data[..]]).concat()[..])
+        crc_32(&([chunk_type.as_bytes(), &chunk_data[..]]).concat()[..])
             .to_be_bytes()
             .to_vec();
 
@@ -89,17 +89,13 @@ fn encode_image_pixels(pixels: Vec<RGBA>, width: i32) -> Vec<u8> {
         );
     }
 
-    let encoded = deflate_bytes_zlib(&scanlines);
-
-    encoded
+    deflate_bytes_zlib(&scanlines)
 }
 
 fn crc_32(data: &[u8]) -> u32 {
     let crc_encode: Crc<u32> = Crc::<u32>::new(&CRC_32_ISO_HDLC);
 
-    let res = crc_encode.checksum(data);
-
-    res
+    crc_encode.checksum(data)
 }
 
 // TODO: allow a `file` parameter
