@@ -1,3 +1,1 @@
-mod png;
-
 fn main() {}
