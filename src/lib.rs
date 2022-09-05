@@ -7,9 +7,6 @@ use deflate::deflate_bytes_zlib;
 
 use std::str;
 
-use std::fs::File;
-use std::io::prelude::*;
-
 fn encode_image_chunk(chunk_type: &str, chunk_data: &mut Vec<u8>) -> Vec<u8> {
     // chunk data length (4 bytes)
     let mut img_data: Vec<u8> = (chunk_data.len() as i32).to_be_bytes().to_vec();
@@ -99,28 +96,24 @@ fn crc_32(data: &[u8]) -> u32 {
 }
 
 // TODO: allow a `file` parameter
-pub fn create_image(data: Vec<RGBA>, width: i32, height: i32) {
+pub fn create_image(data: Vec<RGBA>, width: i32, height: i32) -> Vec<u8> {
     // https://en.wikipedia.org/wiki/Portable_Network_Graphics#File_header
-    let mut image_header = vec![0x89u8, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
+    let mut image_data = vec![0x89u8, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
 
     // The IHDR contains lots of metadata such as dimensions, bit depth, color type, and more
-    image_header.append(&mut encode_image_chunk(
+    image_data.append(&mut encode_image_chunk(
         "IHDR",
         &mut encode_image_metadata(width, height),
     ));
 
     // The IDAT chunk contains the actual image data which is the output stream of the compression algorithm.
-    image_header.append(&mut encode_image_chunk(
+    image_data.append(&mut encode_image_chunk(
         "IDAT",
         &mut encode_image_pixels(data, width),
     ));
 
     // IEND marks the image end; the data field of the IEND chunk has 0 bytes/is empty
-    image_header.append(&mut encode_image_chunk("IEND", &mut vec![]));
+    image_data.append(&mut encode_image_chunk("IEND", &mut vec![]));
 
-    let mut png_file = File::create("image.png").expect("Could not create/write to `image.png`");
-
-    png_file
-        .write_all(&image_header[..])
-        .expect("Could not write to `image.png`");
+    image_data
 }

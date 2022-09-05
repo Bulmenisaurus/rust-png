@@ -1,6 +1,8 @@
 pub use png;
-
 use png::RGBA;
+
+use std::fs::File;
+use std::io::prelude::*;
 
 use rand::Rng;
 
@@ -20,5 +22,14 @@ fn main() {
     for _ in 0..(height * width) {
         data.push(random_pixel());
     }
-    png::create_image(data, width, height);
+    let image_data = png::create_image(data, width, height);
+
+    let file_path = "./images/random-image.png";
+
+    let mut png_file = File::create(file_path)
+        .unwrap_or_else(|_| panic!("Could not create/write to `{}`", file_path));
+
+    png_file
+        .write_all(&image_data[..])
+        .unwrap_or_else(|_| panic!("Could not write to `{}`", file_path));
 }
