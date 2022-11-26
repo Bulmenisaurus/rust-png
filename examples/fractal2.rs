@@ -112,8 +112,8 @@ fn get_pixel_color(x: i32, y: i32, width: i32, height: i32) -> RGBA {
             break;
         }
     }
-    // convert integer in range [0, amount_iterations) to [0, 256), then invert
-    let color = (255. / f64::from(amount_iterations) * f64::from(result_i));
+    // convert integer in range [0, amount_iterations) to [0, 256)
+    let color = 255. / f64::from(amount_iterations) * f64::from(result_i);
 
     let color: u8 = color as u8;
     if strange_converge(c) {
