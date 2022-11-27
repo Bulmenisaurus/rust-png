@@ -68,7 +68,7 @@ fn strange_converge(c: Complex) -> bool {
 fn get_pixel_color(x: i32, y: i32, width: i32, height: i32) -> RGBA {
     let center_x = 0.0;
     let center_y = 0.0;
-    let scale_factor: f64 = 1. / 2000.;
+    let scale_factor: f64 = 1. / (2f64).powi(13);
 
     let (mut a, mut b, mut c, mut d, mut e, mut f, mut g) = (
         Complex::default(),
@@ -85,9 +85,10 @@ fn get_pixel_color(x: i32, y: i32, width: i32, height: i32) -> RGBA {
         imaginary: f64::from(y - height / 2) * scale_factor - center_y,
     };
 
+    // book suggests 0.35 + 0.35i
     let u = Complex {
         real: 0.35,
-        imaginary: 0.35,
+        imaginary: 0.351,
     };
 
     let amount_iterations = 200;
@@ -135,8 +136,8 @@ fn get_pixel_color(x: i32, y: i32, width: i32, height: i32) -> RGBA {
 
 fn main() {
     let mut data = Vec::new();
-    let height = 4000;
-    let width = 4000;
+    let height = 2000;
+    let width = 2000;
 
     for y in 0..height {
         for x in 0..width {
